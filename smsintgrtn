@@ -1,0 +1,119 @@
+<?php
+extract($_POST);
+if(isset($register))
+{
+$mob=$_REQUEST['mobile'];
+$msg=$_REQUEST['msg'];
+
+	
+	
+	//Send sms to sender and reciever
+	$senderId = "PHPTPN";
+		$route = 4;
+		$campaign = "OTP";
+		$sms = array(
+			'message' => "Message : $msg",
+			'to' => array($mob)
+		);
+		//Prepare you post parameters
+		$postData = array(
+			'sender' => $senderId,
+			'campaign' => $campaign,
+			'route' => $route,
+			'sms' => array($sms)
+		);
+		$postDataJson = json_encode($postData);
+
+		$url="http://login.bulksms365.in/api/v2/sendsms";
+
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => "$url",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_CUSTOMREQUEST => "POST",
+			CURLOPT_POSTFIELDS => $postDataJson,
+			CURLOPT_HTTPHEADER => array(
+				"authkey: 7720ARd4rlCOX5ad7",
+				"content-type: application/json"
+			),
+		));
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+		curl_close($curl);
+	//Send sms to sender and reciever
+	
+		$err="<h4 style='color:green'>Message Send successfully</h4>";
+
+}
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>Send Dynamic Message </title>
+<STYLE>
+.panel-body h2{
+		text-align:center;
+		font-weight:bold;
+		margin-top:20px;
+		margin-bottom:10px;
+}
+
+</STYLE>
+    <!-- Bootstrap Core CSS -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+
+<body style=" background-color: rgb(0, 36, 74);">
+
+    <div class="container" >
+        <div class="row" style="margin-top:20px">
+            <div class="col-md-6 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Please Register</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <fieldset>
+                 			   				
+								
+								<div class="form-group">
+								<label>Student Mobile Number</label>
+                                    <input class="form-control" value="<?php echo $mobile; ?>" name="mobile" type="number"  required placeholder="Enter Your mobile">
+                                </div>
+								
+								<div class="form-group">
+								<label>Enter Your message</label>
+                                    <textarea class="form-control" name="msg"></textarea>
+                                </div>
+				
+							   
+                                
+								<div class="form-group">
+               <input name="register" type="submit" value="Send Message" class="btn  btn-primary">
+                				</div>
+								
+								<div class="form-group">
+                                    <label>
+                                        <?php echo @$err;?>
+                                    </label>
+                                </div>
+								
+                                
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
